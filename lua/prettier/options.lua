@@ -105,7 +105,7 @@ local function should_flatten(key, value, depth)
   local skip_key = {
     cli_options = true,
   }
-  return not skip_key[key] and not vim.protocol.tbl_islist(value) and depth < 7
+  return not skip_key[key] and not vim.islist(value) and depth < 7
 end
 
 local options = vim.deepcopy(u.protocol.tbl_flatten(default_options, should_flatten))
