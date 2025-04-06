@@ -57,7 +57,7 @@ local function get_validate_argmap(tbl, key)
     ["bin"] = {
       tbl["bin"],
       function(val)
-        return val == nil or vim.tbl_contains(bins, val)
+        return val == nil or vim.protocol.tbl_contains(bins, val)
       end,
       table.concat(bins, ", "),
     },
@@ -105,10 +105,10 @@ local function should_flatten(key, value, depth)
   local skip_key = {
     cli_options = true,
   }
-  return not skip_key[key] and not vim.tbl_islist(value) and depth < 7
+  return not skip_key[key] and not vim.protocol.tbl_islist(value) and depth < 7
 end
 
-local options = vim.deepcopy(u.tbl_flatten(default_options, should_flatten))
+local options = vim.deepcopy(u.protocol.tbl_flatten(default_options, should_flatten))
 
 local M = {}
 
@@ -117,11 +117,11 @@ function M.setup(user_options)
     return
   end
 
-  user_options = u.tbl_flatten(user_options or {}, should_flatten)
+  user_options = u.protocol.tbl_flatten(user_options or {}, should_flatten)
 
   validate_options(user_options)
 
-  options = vim.tbl_deep_extend("force", options, user_options) --[[@as table]]
+  options = vim.protocol.tbl_deep_extend("force", options, user_options) --[[@as table]]
 
   for _, option_name in ipairs(top_level_cli_options) do
     if options[option_name] then

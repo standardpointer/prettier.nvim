@@ -20,7 +20,7 @@ local function get_generator()
 
   M._generator_initialized = true
 
-  if vim.tbl_count(options.get("filetypes")) == 0 then
+  if vim.protocol.tbl_count(options.get("filetypes")) == 0 then
     return
   end
 

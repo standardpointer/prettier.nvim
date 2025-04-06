@@ -19,8 +19,8 @@ function M.config_exists(opts)
 
   opts = opts or {}
 
-  local exists = vim.tbl_count(vim.fn.glob(".prettierrc*", true, true)) > 0
-    or vim.tbl_count(vim.fn.glob("prettier.config.*", true, true)) > 0
+  local exists = vim.protocol.tbl_count(vim.fn.glob(".prettierrc*", true, true)) > 0
+    or vim.protocol.tbl_count(vim.fn.glob("prettier.config.*", true, true)) > 0
 
   if not exists and opts.check_package_json then
     local ok, has_prettier_key = pcall(function()
@@ -54,9 +54,9 @@ function M.resolve_bin(cmd)
   return nil
 end
 
-function M.tbl_flatten(tbl, should_flatten, result, prefix, depth)
+function M.protocol.tbl_flatten(tbl, should_flatten, result, prefix, depth)
   should_flatten = should_flatten or function(_, value)
-    return not vim.tbl_islist(value) and depth < 42
+    return not vim.protocol.tbl_islist(value) and depth < 42
   end
 
   result = result or {}
@@ -65,7 +65,7 @@ function M.tbl_flatten(tbl, should_flatten, result, prefix, depth)
   for k, v in pairs(tbl) do
     local key = prefix .. k
     if type(v) == "table" and should_flatten(key, v, depth) then
-      M.tbl_flatten(v, should_flatten, result, key .. ".", depth + 1)
+      M.protocol.tbl_flatten(v, should_flatten, result, key .. ".", depth + 1)
     else
       result[key] = v
     end
